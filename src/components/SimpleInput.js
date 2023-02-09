@@ -11,23 +11,29 @@ const SimpleInput = (props) => {
    // ------------------------- //
 
    //------ VARIABLES DECS -----//
+   const enteredJobIsValid = enteredJob.trim() !== '';
    const enteredNameIsValid = enteredName.trim() !== '';
    const nameInputInvalid = !enteredNameIsValid && formInteracted // if user has used the form and name is still invalid.
+   const jobInputInvalid = !enteredJobIsValid && formInteracted // if user has used the form and name is still invalid.
    
-   const inputClasses = nameInputInvalid ? 'form-control invalid' : 'form-control';
+   const inputClasses = nameInputInvalid && enteredJobIsValid ? 'form-control invalid' : 'form-control';
    // ------------------------- //
 
    useEffect(() => {
-      if (enteredNameIsValid) {
+      if (enteredNameIsValid && enteredJobIsValid) {
          setFormIsValid(true);
       } else {
          setFormIsValid(false);
       }
-   }, [enteredNameIsValid]);
+   }, [enteredNameIsValid, enteredJobIsValid]);
 
    //-------- FUNCTIONS --------//
    function nameChangeHandler(event) {
       setEnteredName(event.target.value);
+   };
+   // ----- ----- //
+   function jobChangeHandler(event) {
+      setEnteredJob(event.target.value);
    };
    // ----- ----- //
    function formSubmissionHandler(event) {
@@ -39,11 +45,16 @@ const SimpleInput = (props) => {
          return;
       }
 
+      setEnteredJob('');
       setEnteredName('');
       setformInteracted(false);
    }
    // ----- ----- //
    function nameInputBlurHandler() {
+      setformInteracted(true);
+   };
+   // ----- ----- //
+   function jobInputBlurHandler() {
       setformInteracted(true);
    };
    // -------------------------- //
@@ -54,6 +65,10 @@ const SimpleInput = (props) => {
             <label htmlFor='name'>Your Name</label>
             <input type='text' id='name' onChange={nameChangeHandler} onBlur={nameInputBlurHandler} value={enteredName}/>
             {nameInputInvalid && <p className="error-text">Name must not be empty.</p>}
+            
+            <label htmlFor='job'>Your Job</label>
+            <input type='text' id='job' onChange={jobChangeHandler} onBlur={jobInputBlurHandler} value={enteredJob}/>
+            {jobInputInvalid && <p className="error-text">Job must not be empty.</p>}
          </div>
          <div className="form-actions">
             <button disabled={!formIsValid}>Submit</button>{/* if form is invalid the button is disabled */}
