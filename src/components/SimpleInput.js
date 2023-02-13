@@ -4,36 +4,38 @@ const SimpleInput = (props) => {
 
    //------- INPUT STATES ------//
    const [enteredName, setEnteredName] = useState('');
-   const [enteredJob, setEnteredJob] = useState('');
+   const [enteredEmail, setEnteredEmail] = useState('');
 
    const [formInteracted, setformInteracted] = useState(false); // tracks whether user has interacted with form yet.
    const [formIsValid, setFormIsValid] = useState(false);
    // ------------------------- //
 
    //------ VARIABLES DECS -----//
-   const enteredJobIsValid = enteredJob.trim() !== '';
+   const enteredEmailIsNotBlank = enteredEmail.trim() !== '';
+   const enteredEmailContainsAt = enteredEmail.includes("@");
    const enteredNameIsValid = enteredName.trim() !== '';
    const nameInputInvalid = !enteredNameIsValid && formInteracted // if user has used the form and name is still invalid.
-   const jobInputInvalid = !enteredJobIsValid && formInteracted // if user has used the form and name is still invalid.
+   const EmailInputBlank = !enteredEmailIsNotBlank && formInteracted // if user has used the form and name is still invalid.
+   const EmailInputInvalid = !enteredEmailContainsAt && formInteracted // if user has used the form and name is still invalid.
    
-   const inputClasses = nameInputInvalid && enteredJobIsValid ? 'form-control invalid' : 'form-control';
+   const inputClasses = nameInputInvalid && EmailInputInvalid ? 'form-control invalid' : 'form-control';
    // ------------------------- //
 
    useEffect(() => {
-      if (enteredNameIsValid && enteredJobIsValid) {
+      if (enteredNameIsValid && enteredEmailIsNotBlank && enteredEmailContainsAt) {
          setFormIsValid(true);
       } else {
          setFormIsValid(false);
       }
-   }, [enteredNameIsValid, enteredJobIsValid]);
+   }, [enteredNameIsValid, enteredEmailIsNotBlank]);
 
    //-------- FUNCTIONS --------//
    function nameChangeHandler(event) {
       setEnteredName(event.target.value);
    };
    // ----- ----- //
-   function jobChangeHandler(event) {
-      setEnteredJob(event.target.value);
+   function emailChangeHandler(event) {
+      setEnteredEmail(event.target.value);
    };
    // ----- ----- //
    function formSubmissionHandler(event) {
@@ -41,11 +43,11 @@ const SimpleInput = (props) => {
 
       setformInteracted(true);
 
-      if(!enteredNameIsValid) {
+      if(!enteredNameIsValid || !enteredEmailIsNotBlank || !enteredEmailContainsAt ) {
          return;
       }
 
-      setEnteredJob('');
+      setEnteredEmail('');
       setEnteredName('');
       setformInteracted(false);
    }
@@ -54,7 +56,7 @@ const SimpleInput = (props) => {
       setformInteracted(true);
    };
    // ----- ----- //
-   function jobInputBlurHandler() {
+   function emailInputBlurHandler() {
       setformInteracted(true);
    };
    // -------------------------- //
@@ -66,9 +68,10 @@ const SimpleInput = (props) => {
             <input type='text' id='name' onChange={nameChangeHandler} onBlur={nameInputBlurHandler} value={enteredName}/>
             {nameInputInvalid && <p className="error-text">Name must not be empty.</p>}
             
-            <label htmlFor='job'>Your Job</label>
-            <input type='text' id='job' onChange={jobChangeHandler} onBlur={jobInputBlurHandler} value={enteredJob}/>
-            {jobInputInvalid && <p className="error-text">Job must not be empty.</p>}
+            <label htmlFor='email'>Your Email</label>
+            <input type='email' id='email' onChange={emailChangeHandler} onBlur={emailInputBlurHandler} value={enteredEmail}/>
+            {EmailInputBlank && <p className="error-text">Email must not be empty.</p>}
+            {EmailInputInvalid && <p className="error-text">Email must contain @.</p>}
          </div>
          <div className="form-actions">
             <button disabled={!formIsValid}>Submit</button>{/* if form is invalid the button is disabled */}
