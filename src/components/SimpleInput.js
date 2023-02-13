@@ -6,7 +6,8 @@ const SimpleInput = (props) => {
    const [enteredName, setEnteredName] = useState('');
    const [enteredEmail, setEnteredEmail] = useState('');
 
-   const [formInteracted, setformInteracted] = useState(false); // tracks whether user has interacted with form yet.
+   const [nameFieldInteracted, setNameFieldInteracted] = useState(false); // tracks whether user has interacted with name field yet.
+   const [emailFieldInteracted, setEmailFieldInteracted] = useState(false);
    const [formIsValid, setFormIsValid] = useState(false);
    // ------------------------- //
 
@@ -14,11 +15,13 @@ const SimpleInput = (props) => {
    const enteredEmailIsNotBlank = enteredEmail.trim() !== '';
    const enteredEmailContainsAt = enteredEmail.includes("@");
    const enteredNameIsValid = enteredName.trim() !== '';
-   const nameInputInvalid = !enteredNameIsValid && formInteracted // if user has used the form and name is still invalid.
-   const EmailInputBlank = !enteredEmailIsNotBlank && formInteracted // if user has used the form and name is still invalid.
-   const EmailInputInvalid = !enteredEmailContainsAt && formInteracted // if user has used the form and name is still invalid.
+
+   const nameInputInvalid = !enteredNameIsValid && nameFieldInteracted // if user has used the form and name is still invalid.
+   const EmailInputBlank = !enteredEmailIsNotBlank && emailFieldInteracted // if user has used the form and name is still invalid.
+   const EmailInputInvalid = !enteredEmailContainsAt && emailFieldInteracted // if user has used the form and name is still invalid.
    
-   const inputClasses = nameInputInvalid && EmailInputInvalid ? 'form-control invalid' : 'form-control';
+   const nameInputClasses = nameInputInvalid ? 'form-control invalid' : 'form-control';
+   const emailInputClasses = EmailInputInvalid ? 'form-control invalid' : 'form-control';
    // ------------------------- //
 
    useEffect(() => {
@@ -41,7 +44,8 @@ const SimpleInput = (props) => {
    function formSubmissionHandler(event) {
       event.preventDefault();
 
-      setformInteracted(true);
+      setNameFieldInteracted(true);
+      setEmailFieldInteracted(true);
 
       if(!enteredNameIsValid || !enteredEmailIsNotBlank || !enteredEmailContainsAt ) {
          return;
@@ -49,25 +53,27 @@ const SimpleInput = (props) => {
 
       setEnteredEmail('');
       setEnteredName('');
-      setformInteracted(false);
+      setNameFieldInteracted(false);
+      setEmailFieldInteracted(false);
    }
    // ----- ----- //
    function nameInputBlurHandler() {
-      setformInteracted(true);
+      setNameFieldInteracted(true);
    };
    // ----- ----- //
    function emailInputBlurHandler() {
-      setformInteracted(true);
+      setEmailFieldInteracted(true);
    };
    // -------------------------- //
 
    return (
       <form onSubmit={formSubmissionHandler}>
-         <div className={inputClasses}>
+         <div className={nameInputClasses}>
             <label htmlFor='name'>Your Name</label>
             <input type='text' id='name' onChange={nameChangeHandler} onBlur={nameInputBlurHandler} value={enteredName}/>
             {nameInputInvalid && <p className="error-text">Name must not be empty.</p>}
-            
+         </div>
+         <div className={emailInputClasses}>
             <label htmlFor='email'>Your Email</label>
             <input type='email' id='email' onChange={emailChangeHandler} onBlur={emailInputBlurHandler} value={enteredEmail}/>
             {EmailInputBlank && <p className="error-text">Email must not be empty.</p>}
