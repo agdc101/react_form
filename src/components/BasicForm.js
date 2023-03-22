@@ -1,4 +1,12 @@
+import { useState } from "react";
+import newUseInput from "../hooks/new-use-input";
+
 const BasicForm = (props) => {
+  const {
+    value: enteredFirstName,
+    
+  } = newUseInput(value => value.trim != '');
+
   return (
     <form>
       <div className='control-group'>
