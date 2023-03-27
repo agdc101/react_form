@@ -18,8 +18,7 @@ const BasicForm = (props) => {
     value: enteredEmail,
     valueChangeHandler: emailChangeHandler,
     isValid: enteredEmailIsValid
-  } = useNewInput(value => value.contains('@'));
-
+  } = useNewInput(value => value.includes('@'));
 
 
   return (
