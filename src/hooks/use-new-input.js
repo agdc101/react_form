@@ -3,20 +3,21 @@ import {useState} from 'react'
 const useNewInput = (validator) => {
 
    const [value, setValue] = useState("");
+   const [nameIsValid, setNameIsValid] = useState(false);
 
-   const valueIsValid = validator(value);
-
+   
 
    function valueChangeHandler(e) {
       setValue(e.target.value);
-      console.log(value);
    }
 
 
    return {
       value: value,
       valueChangeHandler,
-      isValid: valueIsValid
+      // fieldBlurHandler,
+      isValid: nameIsValid,
+      // hasError: valueHasError
    }
 
 }
