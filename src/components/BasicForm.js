@@ -5,11 +5,11 @@ const BasicForm = (props) => {
 
   const {
       value: enteredFirstName,
-      hasError: firstNameHasError,
       isValid: enteredFirstNameIsValid,
       valueChangeHandler: firstNameChangeHandler,
       fieldBlurHandler: firstNameBlurHandler,
-      reset: resetFnameField
+      reset: resetFnameField,
+      hasError: firstNameHasError,
   } = useNewInput(value => value.trim !== '');
 
 
@@ -37,7 +37,8 @@ const BasicForm = (props) => {
          <div className='form-control'>
             <label htmlFor='fname'>First Name</label>
             <input type='text' id='fname' value={enteredFirstName} onChange={firstNameChangeHandler} onBlur={firstNameBlurHandler}/>
-            {firstNameHasError && <span style={{color:"red"}}>This name field is invalid!</span>}
+            {!firstNameHasError && <span style={{color:"red"}}>This name field is invalid!</span>}
+            <p>{firstNameHasError}</p>
          </div>
       </div>
       <div className='form-actions'>
