@@ -6,20 +6,19 @@ const useNewInput = (validator) => {
    const [nameIsValid, setNameIsValid] = useState(false);
    const [fieldInteracted, setFieldInteracted] = useState(false);
 
-   const inputError = validator(value);
+   const inputIsValid = validator(value);
    
-   const hasError = fieldInteracted && !inputError;
+   const hasError = fieldInteracted && !inputIsValid;
 
-   console.log(fieldInteracted);
 
    function valueChangeHandler(e) {
       setValue(e.target.value);
-      console.log('vc', fieldInteracted);
+      console.log('vc', inputIsValid);
    }
 
    function fieldBlurHandler() {
       setFieldInteracted(true);
-      console.log('fb', fieldInteracted);
+      console.log('fb', inputIsValid);
    }
 
    return {
