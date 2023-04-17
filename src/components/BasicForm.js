@@ -10,7 +10,7 @@ const BasicForm = (props) => {
       fieldBlurHandler: firstNameBlurHandler,
       reset: resetFnameField,
       hasError: firstNameHasError,
-  } = useNewInput(value => value.trim !== '');
+  } = useNewInput(value => value.trim === '');
 
 
 

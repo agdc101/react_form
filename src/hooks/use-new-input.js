@@ -8,6 +8,9 @@ const useNewInput = (validator) => {
 
    const inputIsValid = validator(value);
    
+   console.log('value =', value);
+   console.log(validator);
+
    const hasError = fieldInteracted && !inputIsValid;
 
 
