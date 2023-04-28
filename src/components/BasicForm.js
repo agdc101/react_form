@@ -3,46 +3,76 @@ import useNewInput from "../hooks/use-new-input";
 
 const BasicForm = (props) => {
 
-  const {
+   const {
       value: enteredFirstName,
       isValid: enteredFirstNameIsValid,
-      valueChangeHandler: firstNameChangeHandler,
-      fieldBlurHandler: firstNameBlurHandler,
-      reset: resetFnameField,
       hasError: firstNameHasError,
-  } = useNewInput(value => value.trim === '');
+      valueChangeHandler: firstNameChangeHandler,
+      inputBlurHandler: firstNameBlurHandler, 
+      reset: resetFirstName,
+   } = useNewInput(value => value.trim() !== '');
 
+   const {
+      value: enteredLastName,
+      isValid: enteredLastNameIsValid,
+      hasError: lastNameHasError,
+      valueChangeHandler: lastNameChangeHandler,
+      inputBlurHandler: lastNameBlurHandler,
+      reset: resetLastName,
+   } = useNewInput(value => value.trim() !== '');
 
+   const {
+      value: enteredEmail,
+      isValid: enteredEmailIsValid,
+      hasError: emailHasError,
+      valueChangeHandler: emailChangeHandler,
+      inputBlurHandler: emailBlurHandler,
+      reset: resetEmail,
+   } = useNewInput(value => value.includes('@'));
 
-// value: enteredName, 
-// hasError: nameInputHasError, 
-// isValid: enteredNameIsValid,
-// valueChangeHandler : nameChangeHandler, 
-// valueBlurHandler : nameBlurHandler ,
-// reset: resetNameInput,
-
-  function formSubmissionHandler(event) {
-   event.preventDefault();
-
-   if(!firstNameHasError) {
-      return;
+   let formIsValid = false;
+   if (enteredFirstNameIsValid && enteredLastNameIsValid && enteredEmailIsValid) {
+      formIsValid = true;
    }
 
-   resetFnameField();
-}
+   function formSubmissionHandler(event) {
+      event.preventDefault();
+
+      if(!formIsValid) {
+         return;
+      }
+
+      resetFirstName();
+      resetLastName();
+      resetEmail();
+
+   }
+
+   const firstNameClasses = firstNameHasError ? 'form-control invalid' : 'form-control';
+   const lastNameClasses = lastNameHasError ? 'form-control invalid' : 'form-control';
+   const emailClasses = emailHasError ? 'form-control invalid' : 'form-control';
 
   return (
    <form onSubmit={formSubmissionHandler}>
       <div className='control-group'>
-         <div className='form-control'>
+         <div className={firstNameClasses}>
             <label htmlFor='fname'>First Name</label>
             <input type='text' id='fname' value={enteredFirstName} onChange={firstNameChangeHandler} onBlur={firstNameBlurHandler}/>
-            {!firstNameHasError && <span style={{color:"red"}}>This name field is invalid!</span>}
-            <p>{firstNameHasError}</p>
+            {firstNameHasError && <p className="error-text">please enter a valid first name</p>}
+         </div>
+         <div className={lastNameClasses}>
+            <label htmlFor='lname'>Last Name</label>
+            <input type='text' id='lname' value={enteredLastName} onChange={lastNameChangeHandler} onBlur={lastNameBlurHandler}/>
+            {lastNameHasError && <p className="error-text">please enter a valid last name</p>}
+         </div>
+         <div className={emailClasses}>
+            <label htmlFor='email'>Email</label>
+            <input type='text' id='email' value={enteredEmail} onChange={emailChangeHandler} onBlur={emailBlurHandler}/>
+            {emailHasError && <p className="error-text">please enter a valid email</p>}
          </div>
       </div>
       <div className='form-actions'>
-         <button>Submit</button>
+         <button disabled={!formIsValid} >Submit</button>
       </div>
    </form>
   );

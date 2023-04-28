@@ -1,37 +1,34 @@
-import {useState} from 'react'
+import {useState} from 'react';
 
-const useNewInput = (validator) => {
+const useInput = (validateValue) => {
+    const [enteredValue, setEnteredValue] = useState('');
+    const [formFieldInteracted, setFormFieldInteracted] = useState(false); 
 
-   const [value, setValue] = useState("");
-   const [nameIsValid, setNameIsValid] = useState(false);
-   const [fieldInteracted, setFieldInteracted] = useState(false);
+    const valueIsValid = validateValue(enteredValue);
+    const hasError = !valueIsValid && formFieldInteracted;
 
-   const inputIsValid = validator(value);
-   
-   console.log('value =', value);
-   console.log(validator);
+    function valueChangeHandler(event) {
+        setEnteredValue(event.target.value);
+    };
 
-   const hasError = fieldInteracted && !inputIsValid;
+    function valueBlurHandler() {
+        setFormFieldInteracted(true);
+    };
 
+    function reset() {
+        setEnteredValue('');
+        setFormFieldInteracted(false);
+    }
 
-   function valueChangeHandler(e) {
-      setValue(e.target.value);
-      console.log('vc', inputIsValid);
-   }
-
-   function fieldBlurHandler() {
-      setFieldInteracted(true);
-      console.log('fb', inputIsValid);
-   }
-
-   return {
-      value: value,
-      valueChangeHandler,
-      fieldBlurHandler,
-      isValid: nameIsValid,
-      hasError
-   }
-
+    return {
+        value: enteredValue,
+        hasError,
+        isValid: valueIsValid,
+        valueChangeHandler,
+        inputBlurHandler: valueBlurHandler,
+        reset
+    }
+    
 }
 
-export default useNewInput;
+export default useInput;
