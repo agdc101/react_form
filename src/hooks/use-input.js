@@ -1,28 +1,39 @@
-import {useState} from 'react';
+import {useState, useReducer} from 'react';
+
+const inputStateReducer = (state, action) => {
+    if (action.type === 'INPUT') {
+        return {value: action.value, isInteracted: state.isInteracted};
+    }
+    if (action.type === 'BLUR') {
+        return {isInteracted: true, value: state.value};
+    }
+    if (action.type === 'RESET') {
+        return {value: '', isInteracted: false};
+    }
+    return {value: '', isInteracted: false};
+}
+
 
 const useInput = (validateValue) => {
-    const [enteredValue, setEnteredValue] = useState('');
-    const [formFieldInteracted, setFormFieldInteracted] = useState(false); 
+    const [inputState, dispatch] = useReducer(inputStateReducer, {value: '', isInteracted: false})
 
-    const valueIsValid = validateValue(enteredValue);
-    const hasError = !valueIsValid && formFieldInteracted;
+    const valueIsValid = validateValue(inputState.value);
+    const hasError = !valueIsValid && inputState.isInteracted;
 
     function valueChangeHandler(event) {
-        setEnteredValue(event.target.value);
-        console.log('vc', valueIsValid);
+        dispatch({type: 'INPUT', value: event.target.value});
     };
 
     function valueBlurHandler() {
-        setFormFieldInteracted(true);
+        dispatch({type: 'BLUR'});
     };
 
     function reset() {
-        setEnteredValue('');
-        setFormFieldInteracted(false);
+        dispatch({type: 'RESET'});
     }
 
     return {
-        value: enteredValue,
+        value: inputState.value,
         hasError,
         isValid: valueIsValid,
         valueChangeHandler,
